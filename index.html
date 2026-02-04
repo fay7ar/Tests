@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>اختبارات fay7ar التفاعلية </title>
+    <title>اختبارات fay7ar التفاعلية</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
@@ -13,6 +13,24 @@
             padding: 20px;
             text-align: center;
             direction: rtl;
+        }
+
+        .visitor-counter {
+            background: linear-gradient(135deg, #1e88e5, #42a5f5);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .bottom-counter {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
         }
 
         h1 {
@@ -48,24 +66,57 @@
 </head>
 <body>
 
-    <h1>🔍 اختبارات fay7ar التفاعلية </h1>
+    <h1>🔍 اختبارات fay7ar التفاعلية</h1>
 
     <div class="quiz-container">
-
-        <!-- الاختبار -->
         <iframe 
             src="https://wordwall.net/ar/embed/73f7c5ca211c4e79b2c4e969a18d5588?themeId=48&templateId=5&fontStackId=0"
             allowfullscreen>
         </iframe>
 
-        <!-- بانر إعلاني -->
         <div class="ad-banner">
             <a href="https://wa.me/218928666754" target="_blank">
                 <img src="https://up6.cc/2026/02/177023636568471.jpg" alt="إعلان">
             </a>
         </div>
-
     </div>
+
+    <!-- عداد الزوار -->
+    <div class="visitor-counter bottom-counter">
+        👥 عدد الزوار: <span id="visitorCount">0</span>
+    </div>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, runTransaction, onValue } 
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // 🔴 بدّل القيم هذه من Firebase Console
+        const firebaseConfig = {
+            apiKey: "API_KEY",
+            authDomain: "mrsal-2008.firebaseapp.com",
+            databaseURL: "https://mrsal-2008-default-rtdb.firebaseio.com",
+            projectId: "mrsal-2008",
+            storageBucket: "mrsal-2008.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const counterRef = ref(db, "visitors/count");
+
+        // زيادة العداد
+        runTransaction(counterRef, (current) => {
+            return (current || 0) + 1;
+        });
+
+        // عرض العداد مباشر
+        onValue(counterRef, (snapshot) => {
+            document.getElementById("visitorCount").innerText = snapshot.val() || 0;
+        });
+    </script>
 
 </body>
 </html>
